@@ -31,6 +31,14 @@ def get_users():
         {'users': [u.serialize() for u in User.query.all()]}
     )
 
+@app.route('/api/user/<int:user_id>/', methods=['GET'])
+def get_users(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return failure_response("user does not exist", 400)
+
+    return success_response(user.serialize(), 200)
+
 @app.route('/api/task/', methods=['POST'])
 def make_task():
     body= json.loads(request.data)
