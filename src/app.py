@@ -42,9 +42,13 @@ def make_task():
 @app.route('/api/<int:user_id>/tasks/', methods=['POST'])
 def create_task(user_id):
     body= json.loads(request.data)
+    user = User.query.filter_by(id=user_id).first()
     #new_task= Task(name=body.get('name'), description= body.get('description', priority = body.get('priority')))
     if not body.get("name") or not body.get("description") or not body.get("priority"):
         return failure_response("arguments not specified", 400)
+    if not user:
+        return failure_response("user not found", 404)
+
     new_task = Task(name=body.get("name"), description=body.get("description"), priority = body.get("priority"), username_id=user_id)
     db.session.add(new_task)
     db.session.commit()

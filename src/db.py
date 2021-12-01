@@ -8,18 +8,17 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
-    tasks = db.relationship("Task", cascade="delete")
+    tasks = db.relationship("Task", order_by="Task.priority", cascade="delete")
 
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
 
     def serialize(self):
-        query = Task.filter_by(id=self.course_id).order_by(Task.priority).desc()
-        #query = {}
+
         return {
             'id': self.id,
             'username': self.username,
-            'tasks': query
+            'tasks': [t.serialize() for t in self.tasks]
         }
 
 class Task(db.Model):
