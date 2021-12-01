@@ -14,13 +14,12 @@ class User(db.Model):
         self.username = kwargs.get('username')
 
     def serialize(self):
-        list = []
-        for i in self.tasks:
-            list.append(i.seralize())
+        query = Task.filter_by(id=self.course_id).order_by(Task.priority).desc()
+        #query = {}
         return {
             'id': self.id,
             'username': self.username,
-            'tasks': list
+            'tasks': query
         }
 
 class Task(db.Model):
