@@ -25,13 +25,13 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({'error': message},). code
 
-@app.route('/user', methods=['GET'])
+@app.route('/api/users/', methods=['GET'])
 def get_users():
     return success_response(
         {'users': [u.serialize() for u in User.query.all()]}
     )
 
-@app.route('/task', methods=['POST'])
+@app.route('/api/task/', methods=['POST'])
 def make_task():
     body= json.loads(request.data)
     new_task= Task(name=body.get('name'), description= body.get('description', priority = body.get('priority')))

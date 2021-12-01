@@ -7,17 +7,20 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Columns(db.String, nullable=False)
-    tasks = db.Column(db.Integer, db.ForeignKey('task.id'))
+    username = db.Column(db.String, nullable=False)
+    tasks = db.relationship("Task", cascade="delete")
 
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
 
     def serialize(self):
+        list = []
+        for i in self.tasks:
+            list.append(i.seralize())
         return {
             'id': self.id,
             'username': self.username,
-            'tasks': [s.serialize() for s in self.tasks]
+            'tasks': list
         }
 
 class Task(db.Model):
@@ -26,7 +29,7 @@ class Task(db.Model):
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     priority = db.Column(db.Integer, nullable=False)
-    username_id= db.relationship('User', cascade = 'delete')
+    username_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name')
