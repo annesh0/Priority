@@ -1,4 +1,5 @@
 import json
+import os
 
 from db import db
 from flask import Flask
@@ -72,13 +73,6 @@ def create_user():
     db.session.commit()
     return success_response(new_user.serialize(), 201)
 
-@app.route("/api/<user_id>/tasks/", methods=["GET"])
-def get_users_tasks(user_id):
-    user = User.query.filter_by(id=user_id).first()
-    if user is None:
-        return failure_response("user not found")
-
-    return success_response(user.serialize())
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
