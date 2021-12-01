@@ -26,6 +26,10 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({'error': message}), code
 
+@app.route("/", methods=["GET"])
+def default():
+    return success_response("default")
+
 @app.route('/api/users/', methods=['GET'])
 def get_users():
     return success_response(
