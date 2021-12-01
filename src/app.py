@@ -32,7 +32,7 @@ def get_users():
     )
 
 @app.route('/api/user/<int:user_id>/', methods=['GET'])
-def get_users(user_id):
+def get_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     if not user:
         return failure_response("user does not exist", 400)
