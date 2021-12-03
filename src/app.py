@@ -33,7 +33,7 @@ def default():
 @app.route('/api/users/', methods=['GET'])
 def get_users():
     return success_response(
-        {'users': [u.serialize() for u in User.query.all()]}
+        {u.serialize() for u in User.query.all()}
     )
 
 @app.route('/api/user/<int:user_id>/', methods=['GET'])
