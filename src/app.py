@@ -32,9 +32,7 @@ def default():
 
 @app.route('/api/categories/', methods=['GET'])
 def get_categories():
-    return success_response(
-        {c.serialize() for c in Category.query.all()}
-    )
+    return success_response({"categories": [c.serialize() for c in Category.query.all()]})
 
 @app.route('/api/category/<int:category_id>/', methods=['GET'])
 def get_category(category_id):
@@ -44,13 +42,6 @@ def get_category(category_id):
 
     return success_response(category.serialize(), 200)
 
-@app.route('/api/task/', methods=['POST'])
-def make_task():
-    body= json.loads(request.data)
-    new_task= Task(name=body.get('name'), description= body.get('description', priority = body.get('priority')))
-    db.session.add(new_task)
-    db.session.commit()
-    return success_response(new_task.serialize(), 201)
 
 @app.route('/api/<int:category_id>/tasks/', methods=['POST'])
 def create_task(category_id):
@@ -62,7 +53,7 @@ def create_task(category_id):
     if not category:
         return failure_response("Category not found", 404)
 
-    new_task = Task(name=body.get("name"), description=body.get("description"), priority = body.get("priority"), categiry_id=category_id)
+    new_task = Task(name=body.get("name"), description=body.get("description"), priority = body.get("priority"), category_id=category_id)
     db.session.add(new_task)
     db.session.commit()
     return success_response(new_task.serialize(), 201)
